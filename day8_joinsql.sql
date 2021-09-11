@@ -201,8 +201,11 @@ CREATE TABLE personel3 (
   
   SELECT bolum_isim, personel_isim, ise_baslama FROM bolumler b LEFT JOIN personel3 p3 ON b.bolum_id= p3.bolum_id WHERE bolum_isim IN ('SATIS','ISLETME','DEPO') ORDER BY bolum_isim;
   
+ 
+ --ORNEK3: Tüm bolumlerde calisan personelin isimlerini, bolum isimlerini ve maaslarini bolum_id ve maas ters sirali listeleyiniz.
+--NOT: calisani olmasa bile bolum ismi gosterilmelidir.
   
-  
+  SELECT personel_isim, bolum_isim, concat('$' , maas), p3.bolum_id FROM bolumler b LEFT JOIN personel3 p3 ON b.bolum_id= p3.bolum_id ORDER BY p3.bolum_id DESC, p3.maas DESC ;
   
   
   

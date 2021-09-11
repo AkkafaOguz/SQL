@@ -49,3 +49,30 @@ CREATE TABLE personel
 
 ALTER TABLE PERSONEL RENAME COLUMN ulke_isim TO ulke_adi;
 
+
+--ORNEK5: personel tablosunun adini isciler4 olarak degistiriniz.
+----------------------------------------------------------------
+
+ALTER TABLE personel RENAME TO isciler4;
+
+SELECT * FROM isciler4;
+
+
+--ORNEK6: isciler tablosundaki ulke_adi sutununa NOT NULL kisitlamasi ekleyiniz.
+-----------------------------------------------------------------
+
+ALTER TABLE isciler4 MODIFY ulke_adi NOT NULL;
+
+--ORNEK7: Maas'u unique yap
+
+ALTER TABLE isciler4 MODIFY maas UNIQUE; --tekrarli maaslar oldugu icin UNIQUE kullanamayiz.
+
+--Ornek8: Check kisitlamasi ile maas sarti ekle
+
+ALTER TABLE isciler4 MODIFY maas CHECK (maas>3000);
+
+INSERT INTO isciler4 VALUES(456715012, 'Ali Sahin', 'Ankara', 2500, 'Ford'); --SQL Error [947] [42000]: ORA-00947: not enough values
+
+
+
+
