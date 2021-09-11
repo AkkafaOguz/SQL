@@ -73,6 +73,6 @@ ALTER TABLE isciler4 MODIFY maas CHECK (maas>3000);
 
 INSERT INTO isciler4 VALUES(456715012, 'Ali Sahin', 'Ankara', 2500, 'Ford'); --SQL Error [947] [42000]: ORA-00947: not enough values
 
-
+--Omer Bulut
 
 
