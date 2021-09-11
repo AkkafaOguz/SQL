@@ -1,5 +1,5 @@
 /*=============================== ALTER TABLE ==================================
-    --iç kaporta için UPDATE (DML), dýþ kaporta için ALTER (DDL)
+    --iÃ§ kaporta iÃ§in UPDATE (DML), dÃ½Ã¾ kaporta iÃ§in ALTER (DDL)
     ALTER TABLE  tabloda ADD, MODIFY, veya DROP/DELETE COLUMNS islemleri icin
     kullanilir.
     ALTER TABLE ifadesi tablolari yeniden isimlendirmek (RENAME) icin de
@@ -73,6 +73,6 @@ ALTER TABLE isciler4 MODIFY maas CHECK (maas>3000);
 
 INSERT INTO isciler4 VALUES(456715012, 'Ali Sahin', 'Ankara', 2500, 'Ford'); --SQL Error [947] [42000]: ORA-00947: not enough values
 
---Omer Bulut
+
 
 
