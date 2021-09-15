@@ -199,7 +199,7 @@ CREATE TABLE personel3 (
 --bolumlerini ve ise_baslama tarihlerini bolum_isim sýralý olarak listeleyiniz.
 --NOT: calisani olmasa bile bolum ismi gosterilmelidir
   
-  SELECT bolum_isim, personel_isim, ise_baslama FROM bolumler b LEFT JOIN personel3 p3 ON b.bolum_id= p3.bolum_id WHERE bolum_isim IN ('SATIS','ISLETME','DEPO') ORDER BY bolum_isim;
+  SELECT bolum_isim, personel_isim, ise_baslama FROM bolumler b LEF	T JOIN personel3 p3 ON b.bolum_id= p3.bolum_id WHERE bolum_isim IN ('SATIS','ISLETME','DEPO') ORDER BY bolum_isim;
   
  
  --ORNEK3: Tüm bolumlerde calisan personelin isimlerini, bolum isimlerini ve maaslarini bolum_id ve maas ters sirali listeleyiniz.

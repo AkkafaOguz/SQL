@@ -219,17 +219,3 @@ CREATE TABLE sehirler2 (
     INSERT INTO sehirler2 VALUES ('232','izmir',3750000);
     INSERT INTO sehirler2 VALUES ('436','Maras',null);	
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
