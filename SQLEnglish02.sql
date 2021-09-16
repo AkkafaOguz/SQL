@@ -185,6 +185,7 @@ INSERT INTO WORKER VALUES ('10004', 'Angie Ocean', 8500);
 SELECT * 
 FROM WORKER;            -->Keyword must be different line in DQL. This IS format.
 
+
 --How to get a specific field from a table
 
 SELECT name
@@ -209,7 +210,7 @@ WHERE id < 10003;
 
 --Get records whose salary is 2000 or 7000 or 12000
 
---1.Way
+--1.Way      (NOT RECOMENDED BOECAUSE OF THE REPETITION)
 
 SELECT *
 FROM WORKER w 
@@ -217,7 +218,8 @@ WHERE salary = 2000 OR SALARY = 7000 OR SALARY =12000;
 
 
 --2.Way
---Instead of using or again and again use IN
+
+--Instead of using or again and again use "IN"
 
 SELECT * 
 FROM WORKER w 
@@ -303,7 +305,7 @@ FROM WORKER w
 WHERE salary > (SELECT min(salary) FROM WORKER);
 
 
---Difficult Interview Question: Select the third highest salary 
+--Difficult Interview Question: Select the third highest salary  (********)
 
 SELECT MAX(salary) AS third_max_salary
 FROM WORKER w 
@@ -317,23 +319,160 @@ FROM WORKER w
 WHERE salary > (SELECT MIN(salary) FROM WORKER w2 WHERE salary > (SELECT MIN(SALARY) FROM WORKER w3));
 
 
+--Select the all data about the worker whose salary ýs the second hýghest
+
+--1.Way : (Can be used all SQL Platforms)
+
+SELECT *
+FROM worker
+WHERE salary = (SELECT MAX(SALARY) AS second_maximum_salary
+                FROM WORKER w 
+                WHERE salary < (SELECT MAX(SALARY) 
+                                FROM WORKER));
+                               
+--2.Way: (Can be used only Oracle SQL (PL/SQL))  (I could bot use because of the Oracle version)
+
+SELECT *
+FROM WORKER 
+ORDER BY salary DESC 
+OFFSET 1 ROW 
+FETCH NEXT 1 ROW ONLY;
+                               
+
+--Select the all data about the worker whose salary ýs the second lowest
+
+--1.Way : (Can be used all SQL Platforms)
+
+SELECT *
+FROM worker
+WHERE salary = (SELECT min(SALARY) AS second_minimum_salary
+                FROM WORKER w 
+                WHERE salary > (SELECT min(SALARY) 
+                                FROM WORKER));
+                               
+--2.Way: (Can be used only Oracle SQL (PL/SQL))  (I could bot use because of the Oracle version)
+                               
+SELECT *
+FROM WORKER 
+ORDER BY salary ASC 
+OFFSET 1 ROW 
+FETCH NEXT 1 ROW ONLY;                               
+                               
+                               
+
+--Challange : Select all data whose salary is the third highest salary from workers table
+
+
+--1.Way : (Can be used all SQL Platforms)
+
+SELECT *
+FROM WORKER 
+WHERE salary = (SELECT MAX(salary) 
+                FROM WORKER 
+                WHERE salary < (SELECT MAX(salary)
+                                FROM WORKER
+                                WHERE salary < (SELECT MAX(salary) 
+                                                FROM worker)));
+                                               
+                                               
+--2.Way: (Can be used only Oracle SQL (PL/SQL))  (I could bot use because of the Oracle version)
+                                              
+SELECT *
+FROM WORKER 
+ORDER BY salary DESC 
+OFFSET 2 ROW 
+FETCH NEXT 1 ROW ONLY;
 
 
 
+CREATE TABLE CUSTOMERS_PRODUCTS 
+(
+  product_id number(10),
+  customer_name varchar2(50),
+  product_name varchar(50)
+);
+
+INSERT INTO CUSTOMERS_PRODUCTS VALUES (10,'Mark','Orange');
+INSERT INTO CUSTOMERS_PRODUCTS VALUES (10,'Mark','Orange');
+INSERT INTO CUSTOMERS_PRODUCTS VALUES (20,'John','Apple');
+INSERT INTO CUSTOMERS_PRODUCTS VALUES (30,'Amy','Palm');
+INSERT INTO CUSTOMERS_PRODUCTS VALUES (20,'Mark','Apple');
+INSERT INTO CUSTOMERS_PRODUCTS VALUES (10,'Adem','Orange');
+INSERT INTO CUSTOMERS_PRODUCTS VALUES (40,'John','Apricot');
+INSERT INTO CUSTOMERS_PRODUCTS VALUES (20,'Eddie','Apple');
+
+
+SELECT * FROM CUSTOMERS_PRODUCTS;
 
 
 
+-- IN CONDITION : Instead of multiple OR we use IN  (********)
+
+
+--1) Select records whose product name is Orange or Apple or Palm
+
+--1.Way: NOT RECOMENDED BECAUSE OF THE REPETITION 
+
+SELECT *
+FROM CUSTOMERS_PRODUCTS cp 
+WHERE PRODUCT_NAME = 'Orange' OR PRODUCT_NAME = 'Apple' OR PRODUCT_NAME = 'Palm';
+
+--2.Way : 
+
+SELECT *
+FROM CUSTOMERS_PRODUCTS cp 
+WHERE PRODUCT_NAME IN ('Orange', 'Apple','Palm');
 
 
 
+-- NOT IN CONDITION  (********)
+
+
+--2) Select records whose product name is Orange or Apple or Palm
+
+SELECT *
+FROM CUSTOMERS_PRODUCTS cp 
+WHERE PRODUCT_NAME NOT IN ('Orange', 'Apple','Palm');
 
 
 
+-- BETWEEN CONDITION (Both side inclisuve) (********)
+
+
+--3) Select records whose product id is less than or equal to 30 and greater than or equal to 20
+
+--1.Way : NOT RECOMENDED BECAUSE OF THE REPETITION 
+
+SELECT *
+FROM CUSTOMERS_PRODUCTS cp 
+WHERE PRODUCT_ID <= 30 AND PRODUCT_ID >=20;
+
+
+--2.Way : 
+
+SELECT *
+FROM CUSTOMERS_PRODUCTS cp 
+WHERE PRODUCT_ID BETWEEN 20 AND 30;  --> 20 and 30 are both inclusive
 
 
 
+-- NOT BETWEEN CONDITION (Both side exclusive) (********)
 
 
+--4) Select records whose product id is less than 20 or greater than 25
+
+--1.Way:
+
+SELECT *
+FROM CUSTOMERS_PRODUCTS cp 
+WHERE PRODUCT_ID < 20 OR  PRODUCT_ID >25;   --> We use OR instead OF AND because there IS NOT such NUMBER which IS less than 20 and greater than 25 (Look at pics)
+
+
+--2.Way : 
+
+SELECT *
+FROM CUSTOMERS_PRODUCTS cp 
+WHERE PRODUCT_ID NOT BETWEEN 20 AND 25;  --> 20 and 25 are both exclusive
 
 
 
