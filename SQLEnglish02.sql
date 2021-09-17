@@ -472,7 +472,127 @@ WHERE PRODUCT_ID < 20 OR  PRODUCT_ID >25;   --> We use OR instead OF AND because
 
 SELECT *
 FROM CUSTOMERS_PRODUCTS cp 
-WHERE PRODUCT_ID NOT BETWEEN 20 AND 25;  --> 20 and 25 are both exclusive
+WHERE PRODUCT_ID NOT BETWEEN 20 AND 25;  --> 20 and 25 are both EXCLUSIVE
 
+
+
+
+--EXISTS Condition : EXISTS condition is used with Subquery.
+--                   If the Subquery returns any record Outher Query will be executed
+--                   If the Subquery does not return any record Outher will not be executed
+--                   EXSITS can be used in SELECT, INSERT, UPDATE, and DELETE commands
+
+
+CREATE TABLE customers_likes
+(
+
+product_id number(10),
+customer_name varchar2(50),
+liked_product varchar (50)
+
+
+);
+
+DROP TABLE CUSTOMERS_LIKES ;
+DROP TABLE CUSTOMERS_PRODUCTS ;
+
+
+INSERT INTO customers_likes VALUES (10,'Mark','Orange');
+INSERT INTO customers_likes VALUES (50,'Mark','Pineapple');
+INSERT INTO customers_likes VALUES (60,'John','Avocado');
+INSERT INTO customers_likes VALUES (30,'Lary','Cherries');
+INSERT INTO customers_likes VALUES (20,'Mark','Apple');
+INSERT INTO customers_likes VALUES (10,'Adem','Orange');
+INSERT INTO customers_likes VALUES (40,'John','Apricot');
+INSERT INTO customers_likes VALUES (20,'Eddie','Apple');
+
+SELECT * FROM CUSTOMERS_LIKES cl ;
+
+
+--1) Select customer names if the product ids are same in customer product and customer likes table
+
+
+SELECT product_id, customer_name
+FROM CUSTOMERS_PRODUCTS cp 
+WHERE EXISTS (SELECT PRODUCT_ID FROM CUSTOMERS_LIKES WHERE cp.PRODUCT_ID = customers_likes.product_id);
+
+
+--2) Delete records if there is 'Orange' as product name in customers likes table
+
+DELETE FROM  customers_likes
+WHERE EXISTS (SELECT liked_product FROM CUSTOMERS_LIKES cl WHERE liked_product= 'Orange' );
+
+
+--3) Update names to "NO name" if there is Lary among names in customers_likes
+
+UPDATE customers_likes
+SET CUSTOMER_NAME = 'NO name'
+WHERE EXISTS (SELECT customer_name FROM CUSTOMERS_LIKES cl WHERE CUSTOMER_NAME = 'Lary');
+
+
+
+--SUBQUERY
+
+
+CREATE TABLE employees1
+(
+
+id number(9),
+name varchar2(50),
+state varchar (50),
+salary number(20),
+company varchar (20)
+
+);
+
+INSERT INTO employees1 VALUES (123456789,'John Walker','Florida', 2500, 'IBM');
+INSERT INTO employees1 VALUES (234567890,'Brad Pitt','Florida', 1500, 'APPLE');
+INSERT INTO employees1 VALUES (345678901,'Eddie Murphy','Texas', 3000, 'IBM');
+INSERT INTO employees1 VALUES (456789012,'Eddie Murphy','Virginia', 1000, 'GOOGLE');
+INSERT INTO employees1 VALUES (567890123,'Eddie Murphy','Texas', 7000, 'MICROSOFT');
+INSERT INTO employees1 VALUES (456789012,'Brad Pitt','Texas', 1500, 'GOOGLE');
+INSERT INTO employees1 VALUES (123456710,'Mark Stone','Pennsylvania', 2500, 'IBM');
+
+
+SELECT * FROM EMPLOYEES1;
+
+
+CREATE TABLE companies
+(
+
+company_id number(9),
+company varchar2(20),
+number_of_employees number(20)
+
+);
+
+
+INSERT INTO companies VALUES (100,'IBM',12000);
+INSERT INTO companies VALUES (101,'GOOGLE',18000);
+INSERT INTO companies VALUES (102,'MICROSOFT',10000);
+INSERT INTO companies VALUES (100,'APPLE',21000);
+
+SELECT * FROM companies;
+
+
+--1) Find the employee and company names whose company has more than 15000 employess
+
+SELECT name, company
+FROM EMPLOYEES1 
+WHERE company IN (SELECT company FROM COMPANIES WHERE companies.number_of_employees > 15000);
+
+
+--2) Find the company ids and company names which are in Florida
+
+SELECT company_id, company
+FROM COMPANIES 
+WHERE company IN (SELECT company FROM employees1 WHERE state = 'Florida');
+
+
+--3) Find the employee name and state which has companies whose company ids are greater than 100
+
+SELECT name,state 
+FROM employees1 
+WHERE company IN (SELECT company FROM companies WHERE company_id >100);  --> We are using company keyword in every question because it is comman collumn in two tables
 
 
