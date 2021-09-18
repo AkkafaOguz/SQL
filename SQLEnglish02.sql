@@ -531,7 +531,10 @@ WHERE EXISTS (SELECT customer_name FROM CUSTOMERS_LIKES cl WHERE CUSTOMER_NAME =
 
 
 
---SUBQUERY
+--SUBQUERY (********) ---------------------------------------------------------
+
+
+--SUBQUERY after WHERE Clause (***)
 
 
 CREATE TABLE employees1
@@ -570,7 +573,7 @@ number_of_employees number(20)
 INSERT INTO companies VALUES (100,'IBM',12000);
 INSERT INTO companies VALUES (101,'GOOGLE',18000);
 INSERT INTO companies VALUES (102,'MICROSOFT',10000);
-INSERT INTO companies VALUES (100,'APPLE',21000);
+INSERT INTO companies VALUES (103,'APPLE',21000);
 
 SELECT * FROM companies;
 
@@ -594,5 +597,319 @@ WHERE company IN (SELECT company FROM employees1 WHERE state = 'Florida');
 SELECT name,state 
 FROM employees1 
 WHERE company IN (SELECT company FROM companies WHERE company_id >100);  --> We are using company keyword in every question because it is comman collumn in two tables
+
+
+
+--SUBQUERY after SELECT Clause (***) ---------------------------------------------------------
+
+
+
+--4) Find the company name, number of employees and avarege salary for every company
+
+SELECT  company, number_of_employees, (SELECT AVG(salary) 
+                                       FROM EMPLOYEES1 
+                                       WHERE companies.COMPANY = employees1.COMPANY) AS average_salary
+FROM COMPANIES ;
+
+
+--5) Find the name of the companies, company ids, maximum and minimum salaries per company
+
+SELECT company, company_id, (SELECT MAX(salary) 
+                             FROM employees1 
+                             WHERE companies.COMPANY= employees1.COMPANY) 
+                             AS max_salary , 
+                            (SELECT min(salary) 
+                             FROM employees1 
+                             WHERE companies.COMPANY= employees1.COMPANY) 
+                             AS min_salary
+FROM COMPANIES;
+
+
+
+--SUBQUERY after FROM Clause  (***) ---------------------------------------------------------
+
+
+
+--6) Get the number of employees whose company id is 100 or 101
+--Later
+
+
+
+
+--LIKE Condition: It is used with WildCard  (***) ---------------------------------------------------------
+
+
+
+
+--A) % Wildcard: It represents zero or more characters (***) 
+
+
+
+--1) Select employee names which start with 'E';
+
+SELECT name
+FROM EMPLOYEES1 e 
+WHERE name LIKE 'E%';
+
+
+--2) Select employee names which end with 'e';
+
+SELECT name 
+FROM EMPLOYEES1 e 
+WHERE name LIKE '%e';
+
+
+--3) Select employee names which start with 'B', end with 't;
+
+SELECT name
+FROM EMPLOYEES1 e 
+WHERE name LIKE 'B%t';
+
+
+--4) Select employee names which has 'a', in any pozition
+
+SELECT name 
+FROM EMPLOYEES1 e 
+WHERE name LIKE '%a%';
+
+
+--5) Select employee names which has 'e' and 'r', in any pozition
+
+SELECT name 
+FROM EMPLOYEES1 e 
+WHERE name LIKE '%e%r%' OR name LIKE '%r%e%' ;   --> IF we do NOT use "OR name LIKE '%r%e%'" we just GET names only which has 'e' FIRST than 'r'. 
+
+
+
+--B) _ Wildcard: It represents single character (***)
+
+
+
+--6) Select state whose second caharacter is 'e' and forth character is 'n';
+
+SELECT state
+FROM EMPLOYEES1 e 
+WHERE state LIKE '_e_n%';
+
+
+--7) Select state whose last second caharacter is 'i'
+
+SELECT state
+FROM EMPLOYEES1 e 
+WHERE state LIKE '%i_';
+
+
+--8) Select state whose second caharacter is 'e' and it has at least 6 characters
+
+SELECT state
+FROM EMPLOYEES1 e 
+WHERE state LIKE '_e____%';
+
+
+--9) Select state which has 'i' in any pozition after second character
+
+SELECT state
+FROM EMPLOYEES1 e 
+WHERE state LIKE '__%i%';
+
+DROP TABLE EMPLOYEES1 ;
+DROP TABLE COMPANIES ;
+
+
+
+--NOT LIKE Condition         (**********)
+
+
+--1) Select words which do not have 'h' in any pozition
+
+SELECT word
+FROM WORDS w 
+WHERE word NOT LIKE '%h%';
+
+
+--2) Select words which do not end with 't' or 'f'
+
+SELECT word
+FROM WORDS w 
+WHERE word NOT LIKE '%t' AND  word NOT LIKE '%f';    -- You should use AND instead OF OR ! (***)
+
+
+--3) Select words which start with any character, not followed by 'a' and not followed by 'e'
+
+SELECT word
+FROM WORDS w 
+WHERE word NOT LIKE '_a%' AND word NOT LIKE '_e%';
+
+
+
+--REGEXP_LIKE Condition: You can use Regular Expression   (***) ---------------------------------------------------------
+
+
+CREATE TABLE words 
+(
+
+  word_id number(10) UNIQUE,
+  word varchar2(50) NOT NULL,
+  number_of_letter number(6)
+  
+);
+
+
+INSERT INTO words VALUES (1001,'hot',3);
+INSERT INTO words VALUES (1002,'hat',3);
+INSERT INTO words VALUES (1003,'hit',3);
+INSERT INTO words VALUES (1004,'hbt',3);
+INSERT INTO words VALUES (1008,'hct',3);
+INSERT INTO words VALUES (1005,'adem',4);
+INSERT INTO words VALUES (1006,'selena',6);
+INSERT INTO words VALUES (1007,'yusuf',5);
+
+SELECT * FROM WORDS ;
+
+
+--1) Select words whose first character is 'h', last character is 't' and second character is 'o' or 'e' or 'i'
+
+
+--1.Way: by using like not recomended because of repetition
+
+SELECT word
+FROM WORDS 
+WHERE word LIKE 'ho%t' OR word LIKE 'he%t' OR word LIKE 'hi%t';
+
+
+--2.Way: by using REGEXP_LIKE
+
+SELECT word
+FROM WORDS 
+WHERE REGEXP_LIKE(word, 'h[oai]t');  --([]) ***
+
+
+--2) Select words whose first character is 'h', last character is 't' and second character is from 'a' to 'e'
+
+SELECT word
+FROM WORDS w 
+WHERE REGEXP_LIKE(word, 'h[a-e]t');   -- 'a' AND 'e' ARE inclusive  ([-]) ***
+
+
+--3) Select words whose first character is 'a' or 's' or 'y'
+
+SELECT word
+FROM WORDS w 
+WHERE REGEXP_LIKE(word, '^[asy]');    -- '^' means Startin value ***  
+
+-- We can also use '^[asy](*)' (*) means same with '%' zero or multiple characters. It is optional (*****)
+
+
+--4) Select words whose last character is 'a' or 'm' or 'f'
+
+SELECT word
+FROM WORDS w 
+WHERE REGEXP_LIKE(word, '(*)[maf]$');    -- '$' means last value ***  
+
+
+--5) Select words whose first character is 'a' and last character is 'a'
+
+SELECT word
+FROM WORDS w 
+WHERE REGEXP_LIKE(word, '^s.*a$'); -- '.*' use FOR multiple OR zero CHARACTERS BETWEEN FIRST AND LAST CHARACTERS (******)
+
+
+--6) Select words which have 'a' in any pozition
+
+
+--1.Way:
+SELECT word
+FROM WORDS w 
+WHERE REGEXP_LIKE(word, '(*)[a](*)');        -- '(*)a(*)' works also ***
+
+--2.Way:
+SELECT word
+FROM WORDS w 
+WHERE REGEXP_LIKE(word, 'a');    -- IN regexp_like USING ONLY one letter gets the words which has a IN ANY pozition
+
+
+--7) Select words which have characters from 'd' to 't' at the begenning followed by and character then 'l'
+
+
+--1.Way:
+SELECT word
+FROM WORDS w 
+WHERE REGEXP_LIKE(word, '^[d-t].*l');
+
+--2.Way:
+SELECT word
+FROM WORDS w 
+WHERE REGEXP_LIKE(word, '^[d-t].[t]');   -- '.' in REGEXP_LIKE same WITH '_' en LIKE  (*****)
+
+
+--7) Select words which have characters from 'd' to 't' at the begenning followed by ant two characters then 'e'
+
+
+--1.Way:
+SELECT word
+FROM WORDS w 
+WHERE REGEXP_LIKE(word, '^[d-t].*[e]');
+
+--2.Way:
+SELECT word
+FROM WORDS w 
+WHERE REGEXP_LIKE(word, '^[d-t]..[e]');
+
+
+
+
+--ORDER BY: To put the records in ascending or descending order we use ORDER BY ---------------------------------------
+--          Can be used just with select STATEMENT (*******)
+
+
+--1) Put the records in ascending order by using number of letters
+
+SELECT *
+FROM WORDS w 
+ORDER BY NUMBER_OF_LETTER  ASC   ; -- ASC IS optional, as default it is ascending 
+
+
+--2) Put hte records in descending order by using words
+
+SELECT *
+FROM WORDS w 
+ORDER BY WORD DESC ;  -- DESC IS NOT optional 
+
+
+--NOTE: In ORDER BY, instead of field names, field numbers can be used as well (*******)
+
+SELECT *
+FROM WORDS w 
+ORDER BY 3 ASC ; -- stands FOR number_of_letters (*******)
+
+
+--3) Put hte records in descending order by using name field, and ascending order by using point field
+
+CREATE TABLE points
+(
+
+name varchar2(50),
+point number(3)
+
+);
+
+INSERT INTO points VALUES ('Ali', 25);
+INSERT INTO points VALUES ('Veli', 37);
+INSERT INTO points VALUES ('Kemal', 43);
+INSERT INTO points VALUES ('Ali', 36);
+INSERT INTO points VALUES ('Ali', 25);
+INSERT INTO points VALUES ('Veli', 29);
+INSERT INTO points VALUES ('Ali', 45);
+INSERT INTO points VALUES ('Veli', 11);
+INSERT INTO points VALUES ('Ali', 125);
+
+
+SELECT *
+FROM points
+ORDER BY name DESC, point ASC;
+
+
+--ALIASES, GROUP BY, HAVING, JOINS, ALTER TABLE
+
 
 
