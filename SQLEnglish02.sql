@@ -913,3 +913,167 @@ ORDER BY name DESC, point ASC;
 
 
 
+--ALIASES (**********)--------------------------------------------------------------------------------
+
+
+
+CREATE TABLE employees1 (
+
+employee_id NUMBER (9),
+employee_first_name varchar2(20),
+employee_last_name varchar (20)
+
+);
+
+
+INSERT INTO employees1 VALUES (14, 'Chris', 'Tae');
+INSERT INTO employees1 VALUES (11, 'John', 'Walker');
+INSERT INTO employees1 VALUES (12, 'Amy', 'Star');
+INSERT INTO employees1 VALUES (13, 'Brad', 'Pitt');
+INSERT INTO employees1 VALUES (15, 'Chris', 'Way');
+
+SELECT * FROM employees1;
+
+CREATE TABLE adresses 
+(
+
+employee_id NUMBER (9),
+strees varchar2(20),
+city varchar2(20),
+state char(2),
+zipcode char (5)
+
+
+);
+
+
+INSERT INTO adresses VALUES (11, '32nd Star 1234', 'Miami', 'FL', '33018');
+INSERT INTO adresses VALUES (12, '23rd Rain 567', 'Jacksonville', 'FL', '32256');
+INSERT INTO adresses VALUES (13, '5th Snow 765', 'Healeah', 'VA', '20121');
+INSERT INTO adresses VALUES (14, '3rd Man 12', 'Weston', 'MI', '12345');
+INSERT INTO adresses VALUES (15, '11th Chris 12', 'St. Johns', 'FL', '32259');
+
+
+SELECT * FROM ADRESSES ;
+
+
+--How to use aliases for table names---------------------------
+
+
+--1) Select employee first name and state, for employee forst name use "firstname" as field name and for state use "employee state" as field name
+
+--1. Way:
+SELECT employees1.employee_first_name, adresses.state 
+FROM EMPLOYEES1, ADRESSES
+WHERE employees1.employee_id =  adresses.employee_id;
+
+
+--2.Way: (To not do repetition of long table names we can give a nick name to a nable. Generally it is the first letter of table.) (These are called "Aliases")
+SELECT e.employee_first_name, a.state 
+FROM EMPLOYEES1 e, ADRESSES a
+WHERE e.employee_id =  a.employee_id;    --> MORE simple, MORE good!
+
+
+--How to put multiple fields into a single field and use aliase fot he field--------------------------------------
+--("||" --> We can join two (or more) fields from a table)
+
+
+--2) Get employee id use "id" as field name, get firstname and last name put them into the same field and use "full_name" as field name.
+SELECT employee_id AS id, employee_first_name || ' ' ||employee_last_name AS full_name
+FROM EMPLOYEES1;
+
+
+
+--Group By (*******) -----------------------------------------------------------------
+
+
+
+CREATE TABLE workes1
+(
+id number(9),
+name varchar2 (50),
+state varchar2 (50),
+salary NUMBER (20),
+company varchar2 (20)
+
+
+);
+
+INSERT INTO workes1 VALUES (123456789,'John Walker','Florida', 2500, 'IBM');
+INSERT INTO workes1 VALUES (234567890,'Brad Pitt','Florida', 1500, 'APPLE');
+INSERT INTO workes1 VALUES (345678901,'Eddie Murphy','Texas', 3000, 'IBM');
+INSERT INTO workes1 VALUES (456789012,'Eddie Murphy','Virginia', 1000, 'GOOGLE');
+INSERT INTO workes1 VALUES (567890123,'Eddie Murphy','Texas', 7000, 'MICROSOFT');
+INSERT INTO workes1 VALUES (456789012,'Brad Pitt','Texas', 1500, 'GOOGLE');
+INSERT INTO workes1 VALUES (123456710,'Mark Stone','Pennsylvania', 2500, 'IBM');
+
+
+select * FROM WORKES1;
+
+
+--1) Find the total salary for evey employee
+
+SELECT name, SUM(salary) AS total_salary 
+FROM workes1
+GROUP BY name
+ORDER BY total_salary DESC ;   -- ("ORDER BY" is used AFTER "GROUP BY" ) (****************************)
+
+
+--2) Find the number of employees per state in descending order by employee name
+
+SELECT state, COUNT(name) AS num_of_workers
+FROM workes1
+GROUP BY state 
+ORDER BY num_of_workers DESC ;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
