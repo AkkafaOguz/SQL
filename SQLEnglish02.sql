@@ -626,13 +626,6 @@ FROM COMPANIES;
 
 
 
---SUBQUERY after FROM Clause  (***) ---------------------------------------------------------
-
-
-
---6) Get the number of employees whose company id is 100 or 101
---Later
-
 
 
 
@@ -1140,6 +1133,11 @@ WHERE SALARY < 2000;
 
 
 
+--Returns common records of 2 queries
+--Returns unique data 
+
+
+
 --1)If you want to get common data from two queries use INTERSECT
 
 
@@ -1157,9 +1155,88 @@ WHERE salary < 2000;
 
 
 
+--2) Find all employee names whose salary is greater than 2000 and company name is IBM, APPLE or MICROSOFT
+
+SELECT name
+FROM WORKES1 w 
+WHERE salary > 2000
+INTERSECT 
+SELECT name 
+FROM WORKES1 w2 
+WHERE company IN ('IBM','APPLE','MICROSOFT');
 
 
 
+
+--MINUS Operator------------------------------
+--It returns unique records
+
+
+
+--1) Find the names whose salary is less than 3000 and not working in GOOGLE
+
+SELECT name 
+FROM WORKES1 w 
+WHERE salary < 3000
+MINUS 
+SELECT name 
+FROM WORKES1 w2 
+WHERE company ='GOOGLE';
+
+
+
+--JOIN  (*******************************************) -----------------------------------------------------
+
+
+
+--1) Inner Join (returns common data)
+--2) Left Join (return all data from left table)
+--3) Right Join (return all data from right table)
+--4) Full Join (returns all data from both table)
+--5) Self Join (You will have a single table but you will use it as 2 tables)
+
+
+
+
+--INNER JOIN (***************************)
+
+
+
+CREATE TABLE my_companies (
+
+company_id NUMBER (9),
+company_name varchar2(20)
+);
+
+
+INSERT INTO my_companies VALUES (100,'IBM');
+INSERT INTO my_companies VALUES (101,'GOOGLE');
+INSERT INTO my_companies VALUES (102,'MICROSOFT');
+INSERT INTO my_companies VALUES (103,'APPLE');
+
+
+CREATE TABLE orders (
+
+order_id number(9),
+company_id number(9),
+order_date date
+
+);
+
+
+
+INSERT INTO orders VALUES (11, 101, '17.08.2020');
+INSERT INTO orders VALUES (22, 102, '18.08.2020');
+INSERT INTO orders VALUES (33, 103, '19.08.2020');
+INSERT INTO orders VALUES (44, 104, '20.08.2020');
+INSERT INTO orders VALUES (55, 105, '21.08.2020');
+
+
+--1) Select company name, order_id and order_date for common companies
+
+SELECT mc.company_name, o.order_id, o.order_date
+FROM my_companies mc INNER JOIN  ORDERS o
+ON o.company_id = mc.company_id;
 
 
 
