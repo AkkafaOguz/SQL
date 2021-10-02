@@ -1027,41 +1027,132 @@ GROUP BY state
 ORDER BY num_of_workers DESC ;
 
 
+--3) Find the number of the employees whose salary is more than $2000 per company
+
+SELECT company, count(*) AS "Number Of Workers"  -- --> IF you do NOT want TO use "_" we can TYPE the name IN "" (***)
+FROM WORKES1 w                                   -- --> IF the COLUMN name IS NOT matter TO count, you can use "*"
+WHERE salary > 2000
+GROUP BY company;
+
+
+--4) Find the minimum and maximum salary for every country
+
+SELECT company, MIN(salary) AS "Minimum Salary", MAX(salary) AS "Maximum Salary"
+FROM WORKES1 w 
+GROUP BY COMPANY ;
+
+
+
+--HAVING CLAUSE (****************************)-------------------------------------------------------------
+--After WHERE we can not use "Aggregate Functions" [SUM(), MAX(), MIN(), COUNT(), AVG()] (*****************)
+--HAVING IS FOR filtering FOR GROUP BY 
+
+
+--1) Find the total salary if ot is greater than 2400 for every employee
+
+
+--This code does not working because of the position of WHERE CLAUSE. After WHERE we can not use "Aggregate Functions" (SUM(), MAX(), MIN(), COUNT(), AVG()) (*****************)
+SELECT name, SUM(salary)
+FROM WORKES1 w 
+WHERE SUM(salary) > 2400
+GROUP BY name;       
+
+
+--This code also does not working because WHERE CLAUSE can not be used after GROUP BY CLAUSE. (Interview Question)(**********)
+SELECT name, SUM(salary)
+FROM WORKES1 w 
+GROUP BY name
+WHERE SUM(salary) > 2400;
+
+
+--That's why, we have to use HAVING CLAUSE to get the solution. 
+SELECT name, SUM(salary) AS "Total Salary"
+FROM WORKES1 w 
+GROUP BY name
+HAVING SUM(salary) > 2400;
+
+
+--2) Find the number if employees if it is more than 1 per state 
+
+SELECT state, count(*) AS "Number Of Employees"
+FROM WORKES1 w 
+GROUP BY STATE 
+HAVING count(*) > 1; -- HAVING IS FOR filtering FOR GROUP BY 
+                     -- After HAVING, you have to use aggregate functions, do not use field names (ALIASES)
+
+
+--3) Find the minimum salary if it is more than 2000 for every company 
+
+SELECT company, MIN(salary) AS "Min Salary"
+FROM WORKES1 w 
+GROUP BY COMPANY 
+HAVING MIN(salary) > 2000; 
+
+
+--4) Find the maximum salary if it is less than 3000 for every state
+
+SELECT state, MAX(salary)
+FROM WORKES1 w 
+GROUP BY state 
+HAVING MAX(salary) < 3000; 
 
 
 
 
+--INION and INION ALL Operator (************************)-------------------------------------------------------------
+
+
+--1)It is used to join the result of 2 queries
+--2)Union operator returns unique records every time, if there are repeated records it removes the repeated ones
+--3)By using UNION Operator, we are being able to put different fields into a single field like in the following code(in same column)
+--4)When you put different fields into a single field by using UNION Operator, fields must have same data type (expression must have same datatype as corresponding expression)
+
+
+--1) Find the state  whose salary is greater than 3000, employee names less than 2000 without duplication
+
+SELECT state AS "State or Employee Name", salary
+FROM WORKES1 w 
+WHERE SALARY > 3000 
+UNION
+SELECT name AS "State or Employee Name", salary
+FROM WORKES1 w 
+WHERE SALARY < 2000;
 
 
 
+--INION ALL ------------------------------
+
+
+--1) Find the state  whose salary is greater than 3000, employee names less than 2000 with duplication
+---> Does the same thing with UNION, just it RETURNS repeated records IF there IS 
+
+SELECT state AS "State or Employee Name", salary
+FROM WORKES1 w 
+WHERE SALARY > 3000 
+UNION ALL  
+SELECT name AS "State or Employee Name", salary
+FROM WORKES1 w 
+WHERE SALARY < 2000;
 
 
 
+--INTERSECT------------------------------
 
 
 
+--1)If you want to get common data from two queries use INTERSECT
 
 
 
+--1) Find all common employee names whose salary is greater than 1000, less than 2000
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+SELECT name
+FROM WORKES1 w 
+WHERE salary > 1000
+INTERSECT 
+SELECT name
+FROM WORKES1 w 
+WHERE salary < 2000;
 
 
 
